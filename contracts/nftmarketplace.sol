@@ -8,6 +8,7 @@ error NftMarketplace__AlreadyListedOnMarketplace(address nftAddress, uint256 tok
 error NftMarketplace__PriceCantBeZero();
 error NftMarketplace__NotYetApproved();
 error NftMarketplace__PriceNotMet(address nftAddress, uint256 tokenId, uint256 price);
+error NoProceeds();
 
 contract NftMarketplace {
     struct Listing {
@@ -121,6 +122,31 @@ contract NftMarketplace {
         emit ItemListed(msg.sender, nftAddress, tokenId, newPrice);
     }
 
+    function withdrawProceeds() external {
+        uint256 proceeds = s_proceeds[msg.sender];
+        if (proceeds <= 0) {
+            revert NoProceeds();
+        }
+        s_proceeds[msg.sender] = 0;
+        (bool success, ) = payable(msg.sender).call{value: proceeds}("");
+        require(success, "Transfer failed");
+    }
+
+    /////////////////////
+    // Getter Functions //
+    /////////////////////
+
+    function getListing(address nftAddress, uint256 tokenId)
+        external
+        view
+        returns (Listing memory)
+    {
+        return s_listing[nftAddress][tokenId];
+    }
+
+    function getProceeds(address seller) external view returns (uint256) {
+        return s_proceeds[seller];
+    }
     ///ListItem
     ///BuyItem
     ///CancelListing
