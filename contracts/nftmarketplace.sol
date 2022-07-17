@@ -183,7 +183,6 @@ contract NftMarketplace is ReentrancyGuard {
         (bool success, ) = payable(msg.sender).call{value: proceeds}("");
         require(success, "Transfer failed");
     }
-
     /////////////////////
     // Getter Functions //
     /////////////////////
