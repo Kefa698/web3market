@@ -176,9 +176,7 @@ contract NftMarketplace is ReentrancyGuard {
      */
     function withdrawProceeds() external {
         uint256 proceeds = s_proceeds[msg.sender];
-        if (proceeds <= 0) {
-            revert NoProceeds();
-        }
+        require(proceeds>0,"no proceeds");
         s_proceeds[msg.sender] = 0;
         (bool success, ) = payable(msg.sender).call{value: proceeds}("");
         require(success, "Transfer failed");
