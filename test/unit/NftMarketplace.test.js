@@ -129,7 +129,7 @@ const { developmentChains } = require("../../helper-hardhat-config")
           })
           describe("withdrawProceeds", function () {
               it("doesn't allow 0 proceed withdrawls", async function () {
-                  await expect(nftMarketplace.withdrawProceeds()).to.be.revertedWith("NoProceeds")
+                  await expect(nftMarketplace.withdrawProceeds()).to.be.revertedWith("no proceeds")
               })
               it("withdraws proceeds", async function () {
                   await nftMarketplace.listItem(basicNft.address, TOKEN_ID, PRICE)
